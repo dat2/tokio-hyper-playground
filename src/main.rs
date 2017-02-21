@@ -25,7 +25,7 @@ use dotenv::dotenv;
 use std::env;
 
 use tokio_service::Service;
-use futures::{Future, BoxFuture};
+use futures::{Future, BoxFuture, Map};
 use futures_cpupool::CpuPool;
 use hyper::server::{Http, Request, Response};
 use hyper::status::StatusCode;
@@ -62,22 +62,24 @@ impl<S> Service for Log<S>
   fn call(&self, request: Self::Request) -> Self::Future {
     let method = request.method().to_string();
     let uri = request.uri().to_string();
-
     let before = Local::now();
-    let response = self.upstream.call(request);
-    let after = Local::now();
 
-    info!("[{}] - {} {} {} μs",
-          after,
-          method,
-          uri,
-          after.signed_duration_since(before).num_microseconds().unwrap());
+    self.upstream.call(request)
+      .map(|response| {
+        let after = Local::now();
+        info!("[{}] - {} {} {} μs",
+            after,
+            method,
+            uri,
+            after.signed_duration_since(before).num_microseconds().unwrap());
 
-    response
+        response
+      })
   }
 }
 
 // Main Service
+#[derive(Clone)]
 struct UserService {
   thread_pool: CpuPool,
   db_pool: r2d2::Pool<PostgresConnectionManager>,

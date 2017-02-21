@@ -1,5 +1,5 @@
 [package]
-name = "user-server"
+name = "tokio-hyper-playground"
 version = "0.1.0"
 authors = ["Nicholas Dujay <nickdujay@gmail.com>"]
 
