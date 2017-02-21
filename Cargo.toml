@@ -1,0 +1,22 @@
+[package]
+name = "user-server"
+version = "0.1.0"
+authors = ["Nicholas Dujay <nickdujay@gmail.com>"]
+
+[dependencies]
+futures = "*"
+tokio-core = "*"
+tokio-proto = "*"
+tokio-service = "*"
+futures-cpupool = "*"
+hyper = { git = "https://github.com/hyperium/hyper" }
+r2d2 = "*"
+r2d2_postgres = "*"
+postgres = { version = "*", features = ["with-serde_json"] }
+dotenv = "*"
+log = "*"
+env_logger = "*"
+chrono = { version = "0.3", features = ["serde"] }
+serde = "*"
+serde_derive = "*"
+serde_json = "*"
